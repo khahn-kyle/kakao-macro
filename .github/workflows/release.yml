@@ -1,0 +1,54 @@
+name: Release DMG
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build-and-release:
+    runs-on: macos-14   # Apple Silicon 러너 (앱은 arm64 전용)
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 의존성 설치
+        run: python3 -m pip install -r requirements.txt
+
+      - name: 태그와 version.py 일치 확인
+        run: |
+          APP_VER=$(python3 -c "from version import APP_VERSION; print(APP_VERSION)")
+          TAG_VER="${GITHUB_REF_NAME#v}"
+          if [ "$APP_VER" != "$TAG_VER" ]; then
+            echo "❌ version.py($APP_VER) ≠ 태그($TAG_VER). version.py를 먼저 올리고 태그를 찍으세요."; exit 1
+          fi
+
+      - name: 표준 빌드
+        env:
+          SKIP_SMOKE: "1"   # CI 러너에는 카카오톡이 없어 기동 스모크 테스트는 생략
+        run: chmod +x build.sh && ./build.sh
+
+      - name: 특버전 빌드
+        env:
+          SKIP_SMOKE: "1"
+        run: ./build.sh 특버전
+
+      - name: Release 생성 + DMG 첨부
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.dmg
+          generate_release_notes: true
+          body: |
+            ## 설치 방법
+            1. 아래 `카카오톡매크로_설치_vX.Y.Z.dmg`를 내려받아 더블클릭
+            2. 열린 창에서 `설치하기.command` 더블클릭
+            3. 자동으로 열리는 '손쉬운 사용' 설정에서 `카카오톡매크로` 켜기
+               (이미 있으면 'ㅡ'로 지운 뒤 '+'로 다시 추가)
+
+            막히면 DMG 안의 **클로드와 함께 설치하기.txt**를 열어 안내대로 하세요.
+
+            `_특버전`은 이미지 여러 장을 보낼 때 전송 확인 창 감지 없이 Enter만 치는 버전입니다.

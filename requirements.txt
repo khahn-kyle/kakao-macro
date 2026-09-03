@@ -1,0 +1,9 @@
+# 카카오톡매크로 의존성 — 로컬 검증 환경 기준 핀 고정
+# 설치: python3 -m pip install -r requirements.txt
+PyQt6==6.10.2
+pyobjc-framework-Cocoa==11.1
+pyobjc-framework-ApplicationServices==11.1
+pyobjc-core==11.1
+pyautogui==0.9.54
+pyperclip==1.11.0
+pyinstaller==6.18.0
