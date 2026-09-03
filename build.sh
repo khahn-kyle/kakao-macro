@@ -14,7 +14,7 @@ cd "$(dirname "$0")"
 
 VERSION="$(python3 -c "from version import APP_VERSION; print(APP_VERSION)")"
 APP="dist/카카오톡매크로.app"
-DIST_DIR="dist/결국또다시업데이트"
+DIST_DIR="dist/dmg_staging"   # DMG에 들어갈 내용물. 매 빌드마다 새로 만든다(저장소에 없어도 동작)
 EXE="$APP/Contents/MacOS/카카오톡매크로"
 
 DMG="dist/카카오톡매크로_설치_v${VERSION}.dmg"
@@ -63,11 +63,18 @@ fi
 fi
 
 echo "[4/5] 배포 폴더 앱 교체..."
-rm -rf "$DIST_DIR/카카오톡매크로.app"
+rm -rf "$DIST_DIR"
+mkdir -p "$DIST_DIR"
 cp -R "$APP" "$DIST_DIR/"
 cp 설치하기.command "$DIST_DIR/설치하기.command"   # 설치 스크립트 원본은 저장소 루트
 cp "클로드와 함께 설치하기.txt" "$DIST_DIR/"
 chmod +x "$DIST_DIR/설치하기.command"
+# 사용설명서: PDF가 있으면 그걸, 없으면 HTML을 동봉 (PDF는 make_pdf.py로 생성, weasyprint 필요)
+if [ -f 사용설명서.pdf ]; then
+  cp 사용설명서.pdf "$DIST_DIR/"
+else
+  cp 사용설명서.html "$DIST_DIR/사용설명서.html"
+fi
 echo "      완료"
 
 echo "[5/5] DMG 생성..."
