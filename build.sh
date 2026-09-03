@@ -17,7 +17,9 @@ APP="dist/카카오톡매크로.app"
 DIST_DIR="dist/dmg_staging"   # DMG에 들어갈 내용물. 매 빌드마다 새로 만든다(저장소에 없어도 동작)
 EXE="$APP/Contents/MacOS/카카오톡매크로"
 
-DMG="dist/카카오톡매크로_설치_v${VERSION}.dmg"
+# 파일명은 ASCII로 — GitHub 릴리즈 업로드/브라우저 다운로드에서 한글 파일명이 깨진다.
+# 사용자가 실제로 보는 이름(마운트된 창 제목)은 아래 -volname 의 한글이다.
+DMG="dist/KakaoMacro_Installer_v${VERSION}.dmg"
 
 echo "=========================================="
 echo " 카카오톡매크로 v${VERSION} 빌드"

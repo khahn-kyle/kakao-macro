@@ -44,7 +44,7 @@ jobs:
           generate_release_notes: true
           body: |
             ## 설치 방법
-            1. 아래 `카카오톡매크로_설치_vX.Y.Z.dmg`를 내려받아 더블클릭
+            1. 아래 `KakaoMacro_Installer_vX.Y.Z.dmg`를 내려받아 더블클릭
             2. 열린 창에서 `설치하기.command` 더블클릭
             3. 자동으로 열리는 '손쉬운 사용' 설정에서 `카카오톡매크로` 켜기
                (이미 있으면 'ㅡ'로 지운 뒤 '+'로 다시 추가)
